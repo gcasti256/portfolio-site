@@ -1,0 +1,98 @@
+---
+import ThemeToggle from "./ThemeToggle.tsx";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-bg/80 backdrop-blur-xl">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 group">
+      <span class="text-lg font-bold text-text-primary group-hover:text-accent transition-colors">
+        GC
+      </span>
+      <span class="hidden sm:inline text-sm text-text-muted">
+        George Castillo
+      </span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+            currentPath === link.href
+              ? "text-accent bg-accent-subtle"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-hover",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="ml-2 pl-2 border-l border-border-subtle">
+        <ThemeToggle client:load />
+      </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="flex md:hidden items-center gap-2">
+      <ThemeToggle client:load />
+      <button
+        id="mobile-menu-btn"
+        class="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors"
+        aria-label="Toggle menu"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-border-subtle bg-bg/95 backdrop-blur-xl">
+    <div class="px-6 py-4 space-y-1">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "block px-4 py-3 rounded-lg text-sm font-medium transition-all",
+            currentPath === link.href
+              ? "text-accent bg-accent-subtle"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-hover",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<script>
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
+  const icon = document.getElementById("menu-icon");
+
+  btn?.addEventListener("click", () => {
+    const isOpen = !menu?.classList.contains("hidden");
+    menu?.classList.toggle("hidden");
+    if (icon) {
+      icon.setAttribute(
+        "d",
+        isOpen
+          ? "M4 6h16M4 12h16M4 18h16"
+          : "M6 18L18 6M6 6l12 12"
+      );
+    }
+  });
+</script>

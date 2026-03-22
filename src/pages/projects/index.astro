@@ -1,0 +1,72 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const projects = [
+  {
+    title: "AI Chat Platform",
+    description: "Real-time chat application with streaming AI responses, multi-model support (OpenAI, Anthropic, local), conversation persistence, and a prompt engineering sandbox.",
+    tags: ["Next.js", "TypeScript", "SSE", "AI", "SQLite"],
+    href: "/projects/ai-chat-platform",
+    github: "https://github.com/georgecastillo/ai-chat-platform",
+    demo: "#",
+    featured: true,
+  },
+  {
+    title: "GitHub Automation CLI",
+    description: "CLI toolkit that automates GitHub workflows — AI-powered PR descriptions, auto-labeling, and release notes generation. Published as an npm package.",
+    tags: ["Node.js", "CLI", "GitHub API", "AI"],
+    href: "/projects/github-automation-cli",
+    github: "https://github.com/georgecastillo/gh-auto",
+  },
+  {
+    title: "Real-time Dashboard",
+    description: "Live data dashboard pulling from multiple APIs with WebSocket updates, interactive charts, and a configurable drag-and-drop widget layout.",
+    tags: ["React", "D3.js", "WebSockets", "Vite"],
+    href: "/projects/realtime-dashboard",
+    github: "https://github.com/georgecastillo/realtime-dash",
+    demo: "#",
+  },
+  {
+    title: "Task Management App",
+    description: "Full-stack project management tool with Kanban boards, drag-and-drop, AI-powered task prioritization, and user authentication.",
+    tags: ["Next.js", "Prisma", "NextAuth", "AI", "Tailwind"],
+    href: "/projects/task-management",
+    github: "https://github.com/georgecastillo/taskflow",
+  },
+  {
+    title: "API Aggregator",
+    description: "Unified API gateway that aggregates multiple services with built-in playground, rate limiting, caching, and auto-generated OpenAPI documentation.",
+    tags: ["Hono", "TypeScript", "Redis", "OpenAPI"],
+    href: "/projects/api-aggregator",
+    github: "https://github.com/georgecastillo/api-hub",
+  },
+  {
+    title: "Web Summarizer Extension",
+    description: "Chrome extension that summarizes any webpage using AI, saves highlights and annotations, and exports to Markdown or Notion.",
+    tags: ["Chrome Extension", "TypeScript", "AI", "Manifest V3"],
+    href: "/projects/web-summarizer",
+    github: "https://github.com/georgecastillo/web-summarizer",
+  },
+];
+---
+
+<Layout title="Projects — George Castillo" description="Full-stack projects built with AI-augmented development workflows">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-12">
+        <h1 class="text-3xl font-bold text-text-primary mb-3">Projects</h1>
+        <p class="text-text-secondary max-w-2xl">
+          Each project is built from scratch using AI-augmented workflows.
+          I use AI as a force multiplier — not a crutch — to ship production-quality code faster.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        {projects.map((project) => (
+          <ProjectCard {...project} />
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,170 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Terminal from "../components/Terminal.tsx";
+import ProjectCard from "../components/ProjectCard.astro";
+
+const featuredProjects = [
+  {
+    title: "AI Chat Platform",
+    description: "Real-time chat application with streaming AI responses, multi-model support (OpenAI, Anthropic, local), conversation persistence, and a prompt engineering sandbox.",
+    tags: ["Next.js", "TypeScript", "SSE", "AI", "SQLite"],
+    href: "/projects/ai-chat-platform",
+    github: "https://github.com/georgecastillo/ai-chat-platform",
+    demo: "#",
+    featured: true,
+  },
+  {
+    title: "GitHub Automation CLI",
+    description: "CLI toolkit that automates GitHub workflows — AI-powered PR descriptions, auto-labeling, and release notes generation. Published as an npm package.",
+    tags: ["Node.js", "CLI", "GitHub API", "AI"],
+    href: "/projects/github-automation-cli",
+    github: "https://github.com/georgecastillo/gh-auto",
+  },
+  {
+    title: "Real-time Dashboard",
+    description: "Live data dashboard pulling from multiple APIs with WebSocket updates, interactive charts, and a configurable drag-and-drop widget layout.",
+    tags: ["React", "D3.js", "WebSockets", "Vite"],
+    href: "/projects/realtime-dashboard",
+    github: "https://github.com/georgecastillo/realtime-dash",
+    demo: "#",
+  },
+];
+
+const skills = [
+  { name: "TypeScript", category: "language" },
+  { name: "React", category: "frontend" },
+  { name: "Next.js", category: "frontend" },
+  { name: "Node.js", category: "backend" },
+  { name: "Astro", category: "frontend" },
+  { name: "Tailwind CSS", category: "frontend" },
+  { name: "PostgreSQL", category: "backend" },
+  { name: "AI/LLMs", category: "ai" },
+  { name: "Git/GitHub", category: "tools" },
+  { name: "REST APIs", category: "backend" },
+  { name: "Docker", category: "tools" },
+  { name: "CI/CD", category: "tools" },
+];
+
+const categoryColors: Record<string, string> = {
+  language: "text-blue-400 bg-blue-400/10",
+  frontend: "text-purple-400 bg-purple-400/10",
+  backend: "text-green-400 bg-green-400/10",
+  ai: "text-pink-400 bg-pink-400/10",
+  tools: "text-amber-400 bg-amber-400/10",
+};
+---
+
+<Layout title="George Castillo — Full-Stack Engineer">
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <!-- Left: Copy -->
+        <div class="flex-1 text-center lg:text-left">
+          <div class="animate-fade-in">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-accent-subtle text-accent mb-6">
+              Available for remote work
+            </span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in-up stagger-1">
+            I build software
+            <span class="gradient-text"> faster with AI</span>
+          </h1>
+
+          <p class="text-lg text-text-secondary max-w-xl mb-8 animate-fade-in-up stagger-2 mx-auto lg:mx-0">
+            Full-stack TypeScript engineer specializing in AI-augmented development.
+            I ship production-quality applications by leveraging AI as a force multiplier.
+          </p>
+
+          <div class="flex flex-wrap gap-4 justify-center lg:justify-start animate-fade-in-up stagger-3">
+            <a
+              href="/projects"
+              class="px-6 py-3 rounded-lg bg-accent text-white font-medium hover:bg-accent-hover transition-colors"
+            >
+              View Projects
+            </a>
+            <a
+              href="/contact"
+              class="px-6 py-3 rounded-lg border border-border text-text-primary font-medium hover:bg-bg-hover transition-colors"
+            >
+              Get in Touch
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Terminal -->
+        <div class="flex-1 w-full max-w-2xl animate-fade-in-up stagger-4">
+          <Terminal client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-2xl font-bold text-text-primary mb-2">Featured Projects</h2>
+          <p class="text-text-secondary">Real applications built with AI-augmented workflows</p>
+        </div>
+        <a
+          href="/projects"
+          class="hidden sm:inline-flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors"
+        >
+          View all
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        {featuredProjects.map((project) => (
+          <ProjectCard {...project} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold text-text-primary mb-2">Tech Stack</h2>
+      <p class="text-text-secondary mb-8">Technologies I use to build and ship</p>
+
+      <div class="flex flex-wrap gap-3">
+        {skills.map((skill) => (
+          <span class:list={[
+            "px-4 py-2 rounded-lg text-sm font-medium",
+            categoryColors[skill.category] || "text-text-secondary bg-bg-elevated",
+          ]}>
+            {skill.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="text-2xl font-bold text-text-primary mb-4">
+        Let's build something together
+      </h2>
+      <p class="text-text-secondary mb-8">
+        I'm looking for remote opportunities where I can leverage AI to ship faster and add value to engineering teams.
+      </p>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-medium hover:bg-accent-hover transition-colors"
+      >
+        Get in Touch
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</Layout>

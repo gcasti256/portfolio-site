@@ -1,0 +1,134 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const timeline = [
+  {
+    period: "Now",
+    title: "Full-Stack Engineer (AI-Augmented)",
+    description: "Building production applications using AI as a force multiplier. Specializing in TypeScript, React, Node.js, and AI integrations.",
+  },
+  {
+    period: "Ongoing",
+    title: "Open Source Contributor",
+    description: "Building and maintaining open-source tools for developer productivity, including CLI tools, GitHub Actions, and npm packages.",
+  },
+  {
+    period: "Foundation",
+    title: "Self-Taught Developer",
+    description: "Built a strong programming foundation through hands-on projects, leveraging AI tools to accelerate learning and tackle complex problems.",
+  },
+];
+
+const approach = [
+  {
+    title: "AI as a Force Multiplier",
+    description: "I don't use AI to replace thinking — I use it to amplify it. AI handles boilerplate, suggests patterns, and accelerates debugging so I can focus on architecture and user experience.",
+    icon: "bolt",
+  },
+  {
+    title: "Ship, Then Iterate",
+    description: "I believe in getting working software in front of users fast. Every project starts with a functional MVP, then gets refined based on real feedback.",
+    icon: "rocket",
+  },
+  {
+    title: "Production Quality",
+    description: "Fast doesn't mean sloppy. Every project has proper error handling, tests, CI/CD, documentation, and follows established patterns and best practices.",
+    icon: "shield",
+  },
+];
+---
+
+<Layout title="About — George Castillo" description="Full-stack TypeScript engineer specializing in AI-augmented development">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <!-- Intro -->
+      <div class="mb-16">
+        <h1 class="text-3xl font-bold text-text-primary mb-6">About Me</h1>
+        <div class="space-y-4 text-text-secondary leading-relaxed max-w-2xl">
+          <p>
+            I'm George Castillo, a full-stack engineer who builds software faster and better by
+            leveraging AI as a core part of my development workflow.
+          </p>
+          <p>
+            In a world where every developer has access to AI tools, the difference isn't
+            <em>whether</em> you use AI — it's <em>how well</em> you use it. I've invested heavily in
+            learning how to direct AI effectively: breaking down complex problems, writing precise prompts,
+            validating outputs, and maintaining code quality throughout.
+          </p>
+          <p>
+            The result? I ship production-ready applications at a pace that rivals teams twice my size.
+            Not because I cut corners, but because I've built a workflow that eliminates busywork
+            and keeps me focused on what matters — solving real problems with clean, maintainable code.
+          </p>
+        </div>
+      </div>
+
+      <!-- My Approach -->
+      <div class="mb-16">
+        <h2 class="text-xl font-bold text-text-primary mb-6">My Approach</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          {approach.map((item) => (
+            <div class="glass-card rounded-xl p-6">
+              <div class="w-10 h-10 rounded-lg bg-accent-subtle flex items-center justify-center text-accent mb-4">
+                {item.icon === "bolt" && (
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                )}
+                {item.icon === "rocket" && (
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 003.46-1.25M15.59 14.37a6 6 0 00-5.84-7.38v4.8m5.84 2.58L12 21.5M3.75 4.5a14.98 14.98 0 003.46 1.25" />
+                  </svg>
+                )}
+                {item.icon === "shield" && (
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                )}
+              </div>
+              <h3 class="font-semibold text-text-primary mb-2">{item.title}</h3>
+              <p class="text-sm text-text-secondary">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="mb-16">
+        <h2 class="text-xl font-bold text-text-primary mb-6">Journey</h2>
+        <div class="space-y-6">
+          {timeline.map((item, index) => (
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-3 h-3 rounded-full bg-accent shrink-0 mt-1.5" />
+                {index < timeline.length - 1 && (
+                  <div class="w-px h-full bg-border-subtle" />
+                )}
+              </div>
+              <div class="pb-6">
+                <span class="text-xs font-medium text-accent uppercase tracking-wider">
+                  {item.period}
+                </span>
+                <h3 class="font-semibold text-text-primary mt-1">{item.title}</h3>
+                <p class="text-sm text-text-secondary mt-1">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center pt-8 border-t border-border-subtle">
+        <p class="text-text-secondary mb-4">
+          Want to work together? I'm open to remote opportunities.
+        </p>
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-medium hover:bg-accent-hover transition-colors"
+        >
+          Let's Talk
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
