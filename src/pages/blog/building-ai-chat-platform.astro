@@ -1,0 +1,117 @@
+---
+import BlogPost from "../../layouts/BlogPost.astro";
+---
+
+<BlogPost
+  title="How I Built a Full-Stack AI Chat Platform in a Weekend"
+  description="Streaming responses, multi-model support, and conversation persistence — built with Next.js and AI assistance."
+  date="2026-03-20"
+  readTime="8 min read"
+  tags={["Next.js", "AI", "Full-Stack", "TypeScript"]}
+>
+
+<h2>The Problem</h2>
+
+<p>
+  Most AI chat interfaces are either too simple (just a text box and API call) or locked behind proprietary platforms. I wanted something in between — a real, self-hosted chat platform that supports multiple AI models, streams responses in real-time, and persists conversations. And I wanted to build it fast.
+</p>
+
+<p>
+  The goal wasn't just to build a chat app. It was to prove a thesis: <strong>an engineer who knows how to leverage AI can ship production-quality software at 5x the speed</strong>, without sacrificing code quality.
+</p>
+
+<h2>Architecture Decisions</h2>
+
+<p>
+  Before writing any code, I mapped out the key technical decisions:
+</p>
+
+<ul>
+  <li><strong>Next.js 15 with App Router</strong> — Server components for the shell, client components for the interactive chat. API routes colocated with the frontend.</li>
+  <li><strong>Server-Sent Events (SSE) over WebSockets</strong> — Simpler to implement for one-way streaming, works through proxies, and matches how the AI APIs actually return data.</li>
+  <li><strong>SQLite via better-sqlite3</strong> — Zero-config persistence. No Docker, no managed database. The app runs with <code>npm run dev</code> and nothing else.</li>
+  <li><strong>Multi-model abstraction</strong> — A provider interface that normalizes OpenAI and Anthropic APIs behind a single <code>streamChat()</code> function.</li>
+</ul>
+
+<h2>The Streaming Pipeline</h2>
+
+<p>
+  The most interesting engineering challenge was the streaming pipeline. Here's how it works:
+</p>
+
+<ol>
+  <li>User sends a message → POST to <code>/api/chat</code></li>
+  <li>Server selects the AI provider based on the chosen model</li>
+  <li>Provider returns an async iterator of text chunks</li>
+  <li>Server wraps the iterator in a <code>ReadableStream</code> with SSE formatting</li>
+  <li>Client reads the stream with <code>EventSource</code> and appends chunks to the UI</li>
+</ol>
+
+<pre><code set:html={`// Simplified streaming handler
+const stream = new ReadableStream({
+  async start(controller) {
+    const encoder = new TextEncoder();
+    for await (const chunk of provider.stream(messages)) {
+      controller.enqueue(
+        encoder.encode(\`data: \${JSON.stringify({ text: chunk })}\\n\\n\`)
+      );
+    }
+    controller.close();
+  },
+});
+
+return new Response(stream, {
+  headers: { "Content-Type": "text/event-stream" },
+});`} /></pre>
+
+<p>
+  The key insight: by abstracting the provider behind an async iterator, adding a new model is just implementing one function. The streaming infrastructure doesn't change.
+</p>
+
+<h2>How AI Accelerated Development</h2>
+
+<p>
+  I used AI assistance throughout the build, but strategically — not as a crutch:
+</p>
+
+<ul>
+  <li><strong>Architecture planning</strong> — Discussed trade-offs between SSE vs WebSockets, SQLite vs Postgres before writing code</li>
+  <li><strong>Boilerplate generation</strong> — Database schema, TypeScript interfaces, API route scaffolding. The repetitive parts.</li>
+  <li><strong>UI components</strong> — Chat bubbles, message list with auto-scroll, model selector dropdown. Things that need to look right but aren't intellectually complex.</li>
+  <li><strong>Edge case handling</strong> — Error states, loading indicators, stream interruption recovery. Easy to forget, tedious to implement manually.</li>
+</ul>
+
+<p>
+  What I did <em>not</em> delegate to AI: the streaming architecture, the provider abstraction design, the state management approach. Those are the decisions that determine whether the codebase scales or collapses. The engineer's job is to make those calls correctly.
+</p>
+
+<h2>What I Learned</h2>
+
+<p>
+  <strong>AI doesn't replace engineering judgment — it amplifies it.</strong> If you know what good architecture looks like, AI helps you get there faster. If you don't, AI will happily generate a well-formatted mess.
+</p>
+
+<p>
+  The biggest time savings came from reducing context-switching. Instead of googling "Next.js SSE streaming example" and reading three blog posts, I described what I needed and got a working implementation to iterate on. The feedback loop went from minutes to seconds.
+</p>
+
+<p>
+  The result: a full-featured chat platform with streaming, conversation history, multi-model support, and a prompt engineering panel — deployed and functional. Not a tutorial project. A real tool I use.
+</p>
+
+<h2>Tech Stack</h2>
+
+<ul>
+  <li><strong>Framework</strong>: Next.js 15 (App Router)</li>
+  <li><strong>Language</strong>: TypeScript (strict mode)</li>
+  <li><strong>Styling</strong>: Tailwind CSS v4</li>
+  <li><strong>Database</strong>: SQLite via better-sqlite3</li>
+  <li><strong>AI Providers</strong>: OpenAI, Anthropic (extensible)</li>
+  <li><strong>Deployment</strong>: Self-hosted (runs on any Node.js server)</li>
+</ul>
+
+<p>
+  <a href="https://github.com/gcasti256/ai-chat-platform">View the source on GitHub →</a>
+</p>
+
+</BlogPost>

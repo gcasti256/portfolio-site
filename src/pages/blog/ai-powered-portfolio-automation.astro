@@ -1,0 +1,142 @@
+---
+import BlogPost from "../../layouts/BlogPost.astro";
+---
+
+<BlogPost
+  title="Meta-Engineering: Building Agents That Build Your Portfolio"
+  description="I built a CLI toolkit that scaffolds projects, generates features, writes docs, and syncs my portfolio site — all powered by AI."
+  date="2026-03-15"
+  readTime="7 min read"
+  tags={["Agents", "Automation", "Meta", "TypeScript"]}
+>
+
+<h2>The Meta Problem</h2>
+
+<p>
+  Here's a recursive problem: to get a job as a developer, you need a portfolio. To build a portfolio, you need projects. To maintain those projects, you need time you don't have because you're busy looking for a job.
+</p>
+
+<p>
+  My solution: <strong>build agents that do the maintenance work</strong>. Not fake projects — real, functional software. But with AI handling the repetitive parts: scaffolding, documentation, keeping everything in sync.
+</p>
+
+<p>
+  The result is <strong>portfolio-agents</strong>, a CLI with four commands that manage my entire portfolio lifecycle.
+</p>
+
+<h2>The Four Agents</h2>
+
+<h3>1. Scaffold — Project Bootstrap</h3>
+
+<p>
+  Every new project starts the same way: TypeScript config, ESLint, CI workflow, README, LICENSE, gitignore. It's 30 minutes of copy-pasting if you do it manually, and you always forget something.
+</p>
+
+<pre><code>npx portfolio-agents scaffold \
+  -n my-new-project \
+  -t nextjs \
+  -d "A description of what it does" \
+  --publish</code></pre>
+
+<p>
+  One command. It creates the project directory, writes all config files from templates, generates a professional README using AI (because the README needs to describe the <em>specific</em> project, not be generic), initializes git, creates a GitHub repo, and pushes. The <code>--publish</code> flag means it goes from zero to live on GitHub in about 15 seconds.
+</p>
+
+<h3>2. Build — AI Feature Generation</h3>
+
+<p>
+  This is the most interesting agent. You describe a feature in plain English, and it:
+</p>
+
+<ol>
+  <li>Reads your project's source code for context</li>
+  <li>Sends the codebase + feature description to Claude</li>
+  <li>Parses the AI's response into file changes</li>
+  <li>Writes the files, runs the build to verify, and commits on a feature branch</li>
+</ol>
+
+<pre><code>npx portfolio-agents build \
+  -p ./my-project \
+  -f "add dark mode toggle with system preference detection"</code></pre>
+
+<p>
+  The key innovation: <strong>structured output parsing</strong>. The AI is instructed to return code blocks tagged with <code>// FILE: path</code> and <code>// ACTION: create|replace</code>. This makes the response deterministically parseable. No regex guessing, no hoping the AI formats things correctly.
+</p>
+
+<h3>3. Docs — Documentation Generator</h3>
+
+<p>
+  READMEs rot. You add a feature, forget to update the docs, and suddenly the README describes a different project than the one that exists. The docs agent fixes this:
+</p>
+
+<pre><code>npx portfolio-agents docs ./my-project --mode all</code></pre>
+
+<p>
+  It analyzes your actual source code — reads <code>package.json</code> for dependencies, scans the <code>src/</code> directory for structure, reads key files for context — then generates a README and ARCHITECTURE.md that accurately describe what the code actually does. Not what it <em>used</em> to do.
+</p>
+
+<p>
+  It also works with remote repos via the GitHub API, so you can regenerate docs without cloning.
+</p>
+
+<h3>4. Sync — Portfolio Site Updater</h3>
+
+<p>
+  The glue that holds everything together. The sync agent:
+</p>
+
+<ul>
+  <li>Fetches metadata for all portfolio projects from GitHub (description, languages, topics, stars, recent commits)</li>
+  <li>Generates a TypeScript data file with project information</li>
+  <li>Creates individual Astro pages for each project</li>
+  <li>Rebuilds the portfolio site and pushes to GitHub Pages</li>
+</ul>
+
+<p>
+  I run it whenever I ship a new project or make significant updates. The portfolio site stays in sync with reality without manual effort.
+</p>
+
+<h2>Architecture: Why a CLI?</h2>
+
+<p>
+  I considered other architectures — a web dashboard, GitHub Actions that run on schedule, a VS Code extension. I chose a CLI because:
+</p>
+
+<ul>
+  <li><strong>Composability</strong> — Each command is independent. You can use one without the others, chain them in scripts, or call them from CI.</li>
+  <li><strong>No infrastructure</strong> — No server to maintain, no database, no authentication. Just <code>npx</code> and go.</li>
+  <li><strong>Transparency</strong> — Every command shows exactly what it's doing. <code>--dry-run</code> lets you preview everything before it happens.</li>
+  <li><strong>Portfolio-worthy</strong> — A well-built CLI demonstrates backend engineering skills in a way that a web dashboard doesn't.</li>
+</ul>
+
+<h2>The Shared Libraries</h2>
+
+<p>
+  All four agents share three core libraries:
+</p>
+
+<ul>
+  <li><strong><code>lib/ai.ts</code></strong> — Thin wrapper around the Anthropic SDK. Two functions: <code>ask()</code> for general queries, <code>askWithCode()</code> for code generation with higher token limits.</li>
+  <li><strong><code>lib/github.ts</code></strong> — Octokit wrapper with typed functions for every GitHub operation the agents need.</li>
+  <li><strong><code>lib/fs.ts</code></strong> — File system utilities plus git operations (init, commit, push). Keeps the command files focused on logic, not plumbing.</li>
+</ul>
+
+<p>
+  This separation means adding a new agent is straightforward: import the libs, write the command logic, register it in the CLI entry point.
+</p>
+
+<h2>The Recursive Irony</h2>
+
+<p>
+  Yes, I used AI to help build the agents that use AI to build portfolio projects. It's turtles all the way down. But that's the point — <strong>the ability to effectively wield AI as a tool is itself a valuable skill</strong>. The portfolio doesn't pretend AI wasn't involved. It showcases that I know how to use it well.
+</p>
+
+<p>
+  The difference between good and bad AI-assisted development isn't whether you use AI. It's whether you understand what you're building well enough to direct it effectively. An AI can generate a function. It can't tell you whether that function should exist.
+</p>
+
+<p>
+  <a href="https://github.com/gcasti256/portfolio-agents">View the source on GitHub →</a>
+</p>
+
+</BlogPost>

@@ -1,0 +1,142 @@
+---
+import BlogPost from "../../layouts/BlogPost.astro";
+---
+
+<BlogPost
+  title="Building CLI Tools That Think: AI-Powered GitHub Automation"
+  description="How I built a CLI that auto-generates PR descriptions, labels issues, and writes release notes using Claude."
+  date="2026-03-18"
+  readTime="6 min read"
+  tags={["CLI", "Automation", "TypeScript", "GitHub"]}
+>
+
+<h2>Why CLI + AI?</h2>
+
+<p>
+  Every developer has repetitive GitHub tasks they hate: writing PR descriptions that explain what changed, labeling issues correctly, drafting release notes from a pile of commits. These tasks are annoying because they require <em>reading and summarizing</em> — something AI is exceptionally good at.
+</p>
+
+<p>
+  I built <strong>gh-auto</strong>, a CLI tool with three commands that automate the drudgery:
+</p>
+
+<ul>
+  <li><code>gh-auto pr-describe</code> — Reads a PR's diff and generates a clear description</li>
+  <li><code>gh-auto label-issues</code> — Analyzes issue text and applies the right labels</li>
+  <li><code>gh-auto release-notes</code> — Generates release notes from commits between tags</li>
+</ul>
+
+<h2>Design Principles</h2>
+
+<p>
+  I had three rules going in:
+</p>
+
+<ol>
+  <li><strong>Dry-run by default mentality</strong> — Every command supports <code>--dry-run</code>. You can always preview what the AI would do before it touches your repo.</li>
+  <li><strong>Composable with existing workflows</strong> — Output is pipe-friendly. You can use it in GitHub Actions, shell scripts, or just the terminal.</li>
+  <li><strong>Minimal dependencies</strong> — Commander for CLI parsing, Octokit for GitHub API, Anthropic SDK for AI. Nothing else.</li>
+</ol>
+
+<h2>How PR Description Generation Works</h2>
+
+<p>
+  The most useful command. Here's the flow:
+</p>
+
+<pre><code set:html={`// 1. Fetch the PR diff from GitHub API
+const diff = await github.getPRDiff(repo, number);
+
+// 2. Build a focused prompt
+const prompt = \`Analyze this pull request diff and write a clear,
+  concise description. Include: what changed, why, and any
+  notable implementation details.
+
+  Diff:
+  \${diff}\`;
+
+// 3. Send to Claude with a system prompt that enforces format
+const description = await ai.generate(prompt, {
+  system: "You are a senior engineer writing PR descriptions...",
+});
+
+// 4. Either preview or update the PR
+if (dryRun) {
+  console.log(description);
+} else {
+  await github.updatePR(repo, number, { body: description });
+}`} /></pre>
+
+<p>
+  The key to good output is the <strong>system prompt</strong>. I spent more time tuning the system prompts than writing the actual CLI code. For PR descriptions, I instruct the AI to:
+</p>
+
+<ul>
+  <li>Start with a one-line summary</li>
+  <li>Group changes by area (backend, frontend, config)</li>
+  <li>Call out breaking changes or things reviewers should focus on</li>
+  <li>Keep it under 300 words — no one reads a novel in a PR description</li>
+</ul>
+
+<h2>Issue Labeling: Classification as a Service</h2>
+
+<p>
+  Issue labeling is a classification problem. The AI reads the issue title and body, then selects from your repo's existing labels. It's not generating labels — it's picking from a known set, which makes it much more reliable.
+</p>
+
+<pre><code set:html={`// Fetch the repo's label set
+const labels = await github.listLabels(repo);
+const labelNames = labels.map(l =&gt; l.name);
+
+// Ask AI to classify
+const prompt = \`Given these available labels: \${labelNames.join(", ")}
+
+  Classify this issue: "\${issue.title}"
+  Body: \${issue.body}
+
+  Return ONLY the label names that apply, comma-separated.\`;`} /></pre>
+
+<p>
+  Constraining the AI's output to a known set is a pattern I use everywhere. It dramatically reduces hallucination and makes the output parseable.
+</p>
+
+<h2>What Made This Project Work</h2>
+
+<p>
+  <strong>The AI isn't the product — the automation is.</strong> The CLI would be useful even with template-based generation. AI just makes the output significantly better. This mindset keeps the tool grounded: if the AI API is down, the tool still works with sensible fallbacks.
+</p>
+
+<p>
+  <strong>Prompt engineering is real engineering.</strong> Each command has a carefully crafted system prompt with few-shot examples, format constraints, and explicit instructions about what to include and omit. The prompts are the most valuable code in the project.
+</p>
+
+<p>
+  <strong>Every command is stateless.</strong> No databases, no config files, no login flows. Just environment variables for API keys and command-line flags for everything else. This makes it trivial to use in CI/CD.
+</p>
+
+<h2>Using It in GitHub Actions</h2>
+
+<pre><code set:html={`# .github/workflows/auto-pr.yml
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  describe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx gh-auto pr-describe --repo $REPO --number $PR_NUMBER
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: \${{ secrets.ANTHROPIC_API_KEY }}`} /></pre>
+
+<p>
+  Three lines of YAML and every PR gets an auto-generated description. That's the kind of automation that compounds over time.
+</p>
+
+<p>
+  <a href="https://github.com/gcasti256/gh-auto">View the source on GitHub →</a>
+</p>
+
+</BlogPost>

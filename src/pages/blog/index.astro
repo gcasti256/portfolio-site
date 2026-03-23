@@ -1,0 +1,75 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const posts = [
+  {
+    slug: "building-ai-chat-platform",
+    title: "How I Built a Full-Stack AI Chat Platform in a Weekend",
+    description: "Streaming responses, multi-model support, and conversation persistence — built with Next.js and AI assistance.",
+    date: "2026-03-20",
+    readTime: "8 min read",
+    tags: ["Next.js", "AI", "Full-Stack"],
+  },
+  {
+    slug: "cli-tools-that-think",
+    title: "Building CLI Tools That Think: AI-Powered GitHub Automation",
+    description: "How I built a CLI that auto-generates PR descriptions, labels issues, and writes release notes using Claude.",
+    date: "2026-03-18",
+    readTime: "6 min read",
+    tags: ["CLI", "Automation", "TypeScript"],
+  },
+  {
+    slug: "ai-powered-portfolio-automation",
+    title: "Meta-Engineering: Building Agents That Build Your Portfolio",
+    description: "I built a CLI toolkit that scaffolds projects, generates features, writes docs, and syncs my portfolio site — all powered by AI.",
+    date: "2026-03-15",
+    readTime: "7 min read",
+    tags: ["Agents", "Automation", "Meta"],
+  },
+];
+---
+
+<Layout title="Blog — George Castillo" description="Technical writing on building software with AI.">
+  <section class="pt-24 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-bold text-text-primary mb-4">Blog</h1>
+      <p class="text-lg text-text-secondary mb-12">
+        Technical deep-dives on building real software with AI. How I think about problems, make decisions, and ship.
+      </p>
+
+      <div class="space-y-8">
+        {posts.map((post) => (
+          <a
+            href={`/portfolio-site/blog/${post.slug}`}
+            class="block group p-6 rounded-xl border border-border-subtle bg-bg-surface hover:bg-bg-hover hover:border-accent/30 transition-all"
+          >
+            <div class="flex items-center gap-3 text-sm text-text-muted mb-3">
+              <time datetime={post.date}>
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </time>
+              <span aria-hidden="true">·</span>
+              <span>{post.readTime}</span>
+            </div>
+            <h2 class="text-xl font-semibold text-text-primary group-hover:text-accent transition-colors mb-2">
+              {post.title}
+            </h2>
+            <p class="text-text-secondary leading-relaxed mb-4">
+              {post.description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-accent-subtle text-accent">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
