@@ -31,9 +31,13 @@ export default function Terminal() {
   }, [visibleLines]);
 
   return (
-    <div className="w-full max-w-2xl rounded-xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-surface)] shadow-2xl">
+    <div
+      role="img"
+      aria-label="Animated terminal demo showing AI-augmented development workflow: scaffolding a project, configuring multi-model support, and deploying to production"
+      className="w-full max-w-2xl rounded-xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-surface)] shadow-2xl"
+    >
       {/* Title bar */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]" aria-hidden="true">
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
           <div className="w-3 h-3 rounded-full bg-[#f59e0b]" />
@@ -45,7 +49,7 @@ export default function Terminal() {
       </div>
 
       {/* Terminal body */}
-      <div className="p-4 font-mono text-sm leading-relaxed h-72 overflow-hidden">
+      <div className="p-4 font-mono text-sm leading-relaxed h-72 overflow-hidden" aria-hidden="true">
         {lines.slice(0, visibleLines).map((line, i) => (
           <div
             key={`${i}-${visibleLines}`}

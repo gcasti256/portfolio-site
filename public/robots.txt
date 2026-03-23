@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gcasti256.github.io/portfolio-site/sitemap-index.xml
